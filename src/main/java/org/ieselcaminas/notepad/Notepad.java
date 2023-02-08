@@ -16,6 +16,8 @@ import javax.swing.undo.UndoManager;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Clipboard;
 import java.awt.Toolkit;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.UnsupportedFlavorException;
 
 /**
  *
@@ -24,7 +26,7 @@ import java.awt.Toolkit;
 public class Notepad extends javax.swing.JFrame {
     
     private static UndoManager undoManager = new UndoManager();
-    
+    private static Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
     /**
      * Creates new form Notepad
      */
@@ -300,12 +302,20 @@ public class Notepad extends javax.swing.JFrame {
         // TODO add your handling code here:
         String text = textArea.getSelectedText();
         StringSelection stringSelection = new StringSelection(text);
-        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.setContents(stringSelection, null);
     }//GEN-LAST:event_pmCopyActionPerformed
-
+    
+    
     private void pmPasteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pmPasteActionPerformed
-        
+        try {
+            String data = (String) clipboard.getData(DataFlavor.stringFlavor);
+            textArea.insert(data, textArea.getCaretPosition());
+            // Do something with the data
+        } catch (UnsupportedFlavorException | IOException e) {
+            int n = JOptionPane.showConfirmDialog(
+            this, e.getMessage(),
+                "Error", JOptionPane.CLOSED_OPTION);
+        }
     }//GEN-LAST:event_pmPasteActionPerformed
     
     private String readFile(File file) throws IOException {
