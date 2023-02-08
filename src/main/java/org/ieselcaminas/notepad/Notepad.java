@@ -9,21 +9,39 @@ import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.event.UndoableEditListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.undo.UndoManager;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Clipboard;
+import java.awt.Toolkit;
 
 /**
  *
  * @author alu10191634
  */
 public class Notepad extends javax.swing.JFrame {
-
+    
+    private static UndoManager undoManager = new UndoManager();
+    
     /**
      * Creates new form Notepad
      */
     public Notepad() {
         initComponents();
+        myInits();
     }
 
+    private void myInits(){
+    textArea.getDocument().addUndoableEditListener(new UndoableEditListener() {
+        @Override
+        public void undoableEditHappened(UndoableEditEvent e) {
+        //TODO Auto-generated method stub
+        undoManager.addEdit(e.getEdit());
+        }
+        });
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -33,6 +51,14 @@ public class Notepad extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jMenuBar2 = new javax.swing.JMenuBar();
+        jMenu4 = new javax.swing.JMenu();
+        jMenu5 = new javax.swing.JMenu();
+        jPopupMenu1 = new javax.swing.JPopupMenu();
+        pmUndo = new javax.swing.JMenuItem();
+        pmRedo = new javax.swing.JMenuItem();
+        pmCopy = new javax.swing.JMenuItem();
+        pmPaste = new javax.swing.JMenuItem();
         jToolBar1 = new javax.swing.JToolBar();
         bSave = new javax.swing.JButton();
         bLoad = new javax.swing.JButton();
@@ -46,15 +72,59 @@ public class Notepad extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         miExit = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
+        miUndo = new javax.swing.JMenuItem();
+        miRedo = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
+
+        jMenu4.setText("File");
+        jMenuBar2.add(jMenu4);
+
+        jMenu5.setText("Edit");
+        jMenuBar2.add(jMenu5);
+
+        jPopupMenu1.setComponentPopupMenu(jPopupMenu1);
+        jPopupMenu1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+
+        pmUndo.setText("Undo");
+        pmUndo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pmUndoActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(pmUndo);
+
+        pmRedo.setText("Redo");
+        pmRedo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pmRedoActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(pmRedo);
+
+        pmCopy.setText("pmCopy");
+        pmCopy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pmCopyActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(pmCopy);
+
+        pmPaste.setText("pmPaste");
+        pmPaste.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pmPasteActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(pmPaste);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jToolBar1.setRollover(true);
 
+        bSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons8-save-24.png"))); // NOI18N
         bSave.setText("Save");
         bSave.setFocusable(false);
-        bSave.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        bSave.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         bSave.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         bSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -63,25 +133,36 @@ public class Notepad extends javax.swing.JFrame {
         });
         jToolBar1.add(bSave);
 
+        bLoad.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons8-ftp-24.png"))); // NOI18N
         bLoad.setText("Load");
         bLoad.setFocusable(false);
-        bLoad.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        bLoad.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         bLoad.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        bLoad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bLoadActionPerformed(evt);
+            }
+        });
         jToolBar1.add(bLoad);
 
         getContentPane().add(jToolBar1, java.awt.BorderLayout.PAGE_START);
 
         textArea.setColumns(20);
         textArea.setRows(5);
+        textArea.setComponentPopupMenu(jPopupMenu1);
         jScrollPane1.setViewportView(textArea);
 
         getContentPane().add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
         jMenu1.setText("File");
 
+        miNew.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        miNew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons8-new-file-24.png"))); // NOI18N
         miNew.setText("New");
         jMenu1.add(miNew);
 
+        miOpen.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        miOpen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons8-ftp-24.png"))); // NOI18N
         miOpen.setText("Open file");
         miOpen.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -91,6 +172,7 @@ public class Notepad extends javax.swing.JFrame {
         jMenu1.add(miOpen);
 
         miSave.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        miSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons8-save-24.png"))); // NOI18N
         miSave.setText("Save");
         miSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -100,12 +182,39 @@ public class Notepad extends javax.swing.JFrame {
         jMenu1.add(miSave);
         jMenu1.add(jSeparator1);
 
+        miExit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_DOWN_MASK));
         miExit.setText("Exit");
+        miExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miExitActionPerformed(evt);
+            }
+        });
         jMenu1.add(miExit);
 
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Edit");
+
+        miUndo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        miUndo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons8-deshacer-24.png"))); // NOI18N
+        miUndo.setText("Undo");
+        miUndo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miUndoActionPerformed(evt);
+            }
+        });
+        jMenu2.add(miUndo);
+
+        miRedo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Y, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        miRedo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons8-derecha-2-24.png"))); // NOI18N
+        miRedo.setText("Redo");
+        miRedo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miRedoActionPerformed(evt);
+            }
+        });
+        jMenu2.add(miRedo);
+
         jMenuBar1.add(jMenu2);
 
         jMenu3.setText("Help");
@@ -118,14 +227,43 @@ public class Notepad extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void bSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSaveActionPerformed
-        // TODO add your handling code here:
+        JFileChooser chooser = new JFileChooser();
+        int returnVal = chooser.showSaveDialog(this);
+        if(returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = chooser.getSelectedFile();
+            PrintWriter out = null;
+            try{
+                out = new PrintWriter(new FileWriter(file));
+                out.println(textArea.getText());
+            } catch (IOException ex) {
+                Logger.getLogger(Notepad.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                if(out != null) {
+                   out.close();
+                }
+            }
+        }
     }//GEN-LAST:event_bSaveActionPerformed
 
     private void miOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miOpenActionPerformed
+        bLoadActionPerformed(evt);
+    }//GEN-LAST:event_miOpenActionPerformed
+
+    private void miSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miSaveActionPerformed
+        bSaveActionPerformed(evt);
+    }//GEN-LAST:event_miSaveActionPerformed
+
+    private void miExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miExitActionPerformed
+        int n = JOptionPane.showConfirmDialog(
+        this, "Are you sure?",
+        "Exit?", JOptionPane.YES_NO_OPTION);
+        if (n == 0){
+            System.exit(0);
+        }
+    }//GEN-LAST:event_miExitActionPerformed
+
+    private void bLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bLoadActionPerformed
         JFileChooser chooser = new JFileChooser();
-        //FileNameExtensionFilter filter = new FileNameExtensionFilter(
-        //"JPG & GIF Images", "jpg", "gif");
-        //chooser.setFileFilter(filter);
         int returnVal = chooser.showOpenDialog(this);
         if(returnVal == JFileChooser.APPROVE_OPTION) {
             File file = chooser.getSelectedFile();
@@ -138,29 +276,37 @@ public class Notepad extends javax.swing.JFrame {
             System.out.println("You chose to open this file: " +
             chooser.getSelectedFile().getName());
         }
-    }//GEN-LAST:event_miOpenActionPerformed
+    }//GEN-LAST:event_bLoadActionPerformed
 
-    private void miSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miSaveActionPerformed
-        JFileChooser chooser = new JFileChooser();
-        //FileNameExtensionFilter filter = new FileNameExtensionFilter(
-        //"JPG & GIF Images", "jpg", "gif");
-        //chooser.setFileFilter(filter);
-        int returnVal = chooser.showSaveDialog(this);
-        if(returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = chooser.getSelectedFile();
-            PrintWriter out = null;
-            try{
-                out = new PrintWriter(new FileWriter(file));
-                out.println(file);
-            } catch (IOException ex) {
-                Logger.getLogger(Notepad.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                if(out != null) {
-                   out.close();
-                }
-            }
-        }
-    }//GEN-LAST:event_miSaveActionPerformed
+    private void miUndoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miUndoActionPerformed
+        undoManager.undo();
+        
+    }//GEN-LAST:event_miUndoActionPerformed
+
+    private void miRedoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miRedoActionPerformed
+        undoManager.redo();
+    
+    }//GEN-LAST:event_miRedoActionPerformed
+
+    private void pmUndoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pmUndoActionPerformed
+        miUndoActionPerformed(evt);
+    }//GEN-LAST:event_pmUndoActionPerformed
+
+    private void pmRedoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pmRedoActionPerformed
+        miRedoActionPerformed(evt);
+    }//GEN-LAST:event_pmRedoActionPerformed
+
+    private void pmCopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pmCopyActionPerformed
+        // TODO add your handling code here:
+        String text = textArea.getSelectedText();
+        StringSelection stringSelection = new StringSelection(text);
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(stringSelection, null);
+    }//GEN-LAST:event_pmCopyActionPerformed
+
+    private void pmPasteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pmPasteActionPerformed
+        
+    }//GEN-LAST:event_pmPasteActionPerformed
     
     private String readFile(File file) throws IOException {
         BufferedReader input = null;
@@ -178,9 +324,11 @@ public class Notepad extends javax.swing.JFrame {
             }
         }
     }
+    
     /**
      * @param args the command line arguments
      */
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -219,14 +367,24 @@ public class Notepad extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu jMenu4;
+    private javax.swing.JMenu jMenu5;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuBar jMenuBar2;
+    private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JMenuItem miExit;
     private javax.swing.JMenuItem miNew;
     private javax.swing.JMenuItem miOpen;
+    private javax.swing.JMenuItem miRedo;
     private javax.swing.JMenuItem miSave;
+    private javax.swing.JMenuItem miUndo;
+    private javax.swing.JMenuItem pmCopy;
+    private javax.swing.JMenuItem pmPaste;
+    private javax.swing.JMenuItem pmRedo;
+    private javax.swing.JMenuItem pmUndo;
     private javax.swing.JTextArea textArea;
     // End of variables declaration//GEN-END:variables
 
